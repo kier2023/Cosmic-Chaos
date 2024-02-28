@@ -9,7 +9,6 @@ pygame.display.set_caption("Cosmic Chaos")
 pygame.mixer.pre_init(44100, -16, 2, 512)
 pygame.mixer.init()
 
-# Load images
 PLAYER_SHIP = pygame.image.load('Assets/Visual Assets/player main.png')
 PLAYER_LASER = pygame.image.load('Assets/Visual Assets/yellow laser.png')
 RED_SPACESHIP = pygame.image.load('Assets/Visual Assets/red ufo.png')
@@ -29,22 +28,19 @@ pygame.mixer.music.load('Assets/Audio Assets/background_music (2).wav')
 
 class MuteButton:
     def __init__(self):
-        self.mute_icon = pygame.transform.scale(UNMUTE, (50, 50))  # Adjust the size
-        self.unmute_icon = pygame.transform.scale(MUTE, (50, 50))  # Adjust the size
+        self.mute_icon = pygame.transform.scale(UNMUTE, (50, 50)) 
+        self.unmute_icon = pygame.transform.scale(MUTE, (50, 50)) 
         self.is_muted = False
 
     def toggle_mute(self):
         self.is_muted = not self.is_muted
 
-        # Adjust music volume based on mute status
         pygame.mixer.music.set_volume(0.0 if self.is_muted else 0.1)
-
-        # Adjust sound effects volume based on mute status
         LASER_SOUND.set_volume(0.0 if self.is_muted else 0.1)
 
     def draw(self, window):
         mute_icon = self.mute_icon if not self.is_muted else self.unmute_icon
-        window.blit(mute_icon, (10, HEIGHT - mute_icon.get_height() - 10))  # Adjust the position
+        window.blit(mute_icon, (10, HEIGHT - mute_icon.get_height() - 10)) 
 
 mute_button = MuteButton()
 
@@ -93,7 +89,6 @@ class Ship:
             self.lasers.append(Laser(self.x, self.y, self.laser_img))
             self.cool_down_counter = 1
 
-            # Adjust the volume just before playing the sound
             LASER_SOUND.set_volume(0.1 if not mute_button.is_muted else 0.0)
             LASER_SOUND.play()
 
@@ -104,7 +99,7 @@ class Ship:
             if laser.off_screen(HEIGHT):
                 self.lasers.remove(laser)
             elif laser.collision(obj):
-                obj.health -= 10  # change this value to whatever you want
+                obj.health -= 10  
                 self.lasers.remove(laser)
 
     def get_width(self):
@@ -159,7 +154,7 @@ class Enemy(Ship):
     def shoot(self):
         if self.cool_down_counter == 0:
             laser = Laser(self.x - 18, self.y, self.laser_img)
-            if 0 <= laser.y <= HEIGHT:  # Checks if the laser is on-screen
+            if 0 <= laser.y <= HEIGHT: 
                 LASER_SOUND.set_volume(0.1 if not mute_button.is_muted else 0.0)
                 LASER_SOUND.play()
             self.lasers.append(laser)
@@ -189,11 +184,9 @@ async def main():
         CLOCK.tick(FPS)
         WIN.blit(BACKGROUND, (0, 0))
         
-        # Display "Click to Start" message on top of background
         start_message = MAIN_FONT.render("Click to Start", True, (255, 255, 255))
         WIN.blit(start_message, (WIDTH // 2 - start_message.get_width() // 2, HEIGHT // 2 - start_message.get_height() // 2))
         
-        # Set the player's initial position at the bottom center
         PLAYER = Player(WIDTH // 2 - PLAYER_SHIP.get_width() // 2, HEIGHT - PLAYER_SHIP.get_height() - 30)
         PLAYER.draw(WIN)
         
@@ -204,24 +197,21 @@ async def main():
                 pygame.quit()
                 sys.exit()
 
-            # Check for left mouse button click to start the game
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-                run = True  # Set run to True when clicked
+                run = True 
 
-            # Check for left mouse button click to start the game
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if 10 <= event.pos[0] <= 10 + mute_button.mute_icon.get_width() and \
                    HEIGHT - 10 - mute_button.mute_icon.get_height() <= event.pos[1] <= HEIGHT - 10:
                     mute_button.toggle_mute()
                 else:
-                    run = True  # Set run to True when clicked
+                    run = True 
 
         await asyncio.sleep(0)
 
     while run:
         CLOCK.tick(FPS)
         WIN.blit(BACKGROUND, (0, 0))
-        # Draw the mute/unmute button
         mute_button.draw(WIN)
         lives_label = MAIN_FONT.render(f"Lives: {LIVES}", True, (255, 255, 255))
         level_label = MAIN_FONT.render(f"Level: {LEVEL}", True, (255, 255, 255))
@@ -260,11 +250,9 @@ async def main():
             if event.type == pygame.QUIT:
                 run = False
 
-            # Check for left mouse button click
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 PLAYER.shoot()
 
-            # Check for left mouse button click for muting
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 if 10 <= event.pos[0] <= 10 + mute_button.mute_icon.get_width() and \
                 HEIGHT - 10 - mute_button.mute_icon.get_height() <= event.pos[1] <= HEIGHT - 10:
