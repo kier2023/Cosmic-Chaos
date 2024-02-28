@@ -62,6 +62,6 @@ python cosmic_chaos.py / py main.py / python main.py
 - **Audio Assets:** BluGame Development
 
 ## License
-This project is licensed under the [MIT License](MIT License).
+This project is licensed under the [MIT License](https://github.com/kier2023/Cosmic-Chaos/blob/main/MIT%20License).
 Feel free to modify and share this game! Have a great time navigating through the cosmic chaos!
 
